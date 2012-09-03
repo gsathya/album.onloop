@@ -162,14 +162,6 @@ def make_html(userRequest, urlCount):
 
 		html = youtubeEmbed
 
-	#print albumInfo.allmusicMetadata
-	#print
-	#print albumInfo.rymMetadata
-	#print
-	#print albumInfo.discogsMetadata
-
-	#html = allmusicMarkup + hrline + rymMarkup + hrline + discogsMarkup + hrline + youtubeEmbed
-
 	return html
 
 if __name__ == "__main__":

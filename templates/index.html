@@ -27,10 +27,12 @@
 
 <body>
 
+<a name="topOfPage"></a>
+
 <div class="formDiv">
 <form id="userform"> <!--onsubmit="return submitForm();"-->
 <fieldset>
-<input class="submitText" type="text" name="name" />
+<input class="submitText" type="text" name="query" />
 <input class="submitBtn" type="submit" value="Search" onclick="return jsonParse();"/>
 </fieldset>
 <hr />
@@ -46,7 +48,7 @@
 <span class='st_plusone_hcount' displayText='Google +1'></span>
 <span class='st_twitter_hcount' displayText='Tweet'></span>
 <span class='st_fblike_hcount' displayText='Facebook Like'></span><hr/>
-<p style="text-align:center;"><a href="mailto:me@onloop.net">Mail</a> | <a href="http://onloop.net" onclick="window.open(this.href);return false;">Blog</a></p>
+<p style="text-align:center;"><a href="http://album.onloop.net/">Home</a> | <a href="#topOfPage">Go to Top</a> | <a href="mailto:me@onloop.net">Mail</a> | <a href="http://github.com/pranavrc/album.onloop/" onclick="window.open(this.href);return false;">Fork</a></p>
 </p>
 
 <p><br /></p>
@@ -93,7 +95,7 @@
 		else $('div.myDiv').append('<img class="loader" src="{{ url_for('static', filename='loader.gif') }}" alt="Fetching..." />');
 
 		if (requests) requests.abort();
-		requests = $.ajax({type:'POST', url: '/', data:"&name=" + formData + "&count=" + count, success: function(response) {
+		requests = $.ajax({type:'POST', url: '/', data:"&query=" + formData + "&count=" + count, success: function(response) {
 				if (count == 1) { $('div.myDiv').html(response); }
 				else { $('img.loader').replaceWith(response); }
 					count++;
@@ -111,10 +113,18 @@
 	//	return false;
 	//}
 
-	$('.submitText').ready(function(){
+	$(document).ready(function(){
                 jQuery(function($){
-	        $('.submitText').Watermark(watermark);
+		        $('.submitText').Watermark(watermark);
 		});
+
+		$('a[href=#topOfPage]').click(function(){
+			$('html, body').animate({scrollTop:0});
+			$('.submitText').val('');
+			$('.submitText').focus();
+		        return false;
+   		});
+
 		
     		/*$(".submitBtn").attr("disabled", "true");
 		$(".submitText").keyup(function(){
