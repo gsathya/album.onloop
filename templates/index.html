@@ -6,7 +6,7 @@
 <meta charset="UTF-8" />
 <title>Check that album out.</title>
 <link href="{{url_for('static',filename='index.css')}}" rel="stylesheet" type="text/css"/>
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"/>
+<link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}"/>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -23,6 +23,9 @@
 <script type="text/javascript">var switchTo5x=true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
 <script type="text/javascript">stLight.options({publisher: "f187793e-d1ad-4240-8539-cc3e6cdec44f"}); </script>
+<script type="text/javascript" src="{{url_for('static',filename='jquery-1.7.2.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static',filename='jquery.watermarkinput.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static',filename='helper.js')}}"></script>
 </head>
 
 <body>
@@ -52,91 +55,6 @@
 </p>
 
 <p><br /></p>
-
-<script type="text/javascript" src="{{url_for('static',filename='jquery-1.7.2.js')}}"></script>
-<script type="text/javascript" src="{{url_for('static',filename='jquery.watermarkinput.js')}}"></script>
-<script type="text/javascript">
-	/*<![CDATA[*/
-	var watermark = "Album/Soundtrack Search (Leave blank for random album.)";
-	var requests;
-
-	function htmlDecode(value){
-		return $('<div/>').html(value).text();
-	}
-
-	function jsonParse() {
-		var jsonFile = "{{url_for('static',filename='list_of_albums.json')}}";
-
-		$.getJSON(jsonFile).success(function(data) {
-				var randomIndex = Math.floor(Math.random() * data.albums.length/5);
-				var randomString = data.albums[randomIndex];
-				var decodedString = htmlDecode(randomString);
-				var formData;
-				formData = assignformString(decodedString);
-				sendRequest(1, 9, formData);
-				});
-		return false;
-	}
-
-	function assignformString(albumChosen) {
-		formString = $('#userform');
-		var f = formString.serializeArray();
-		if(f[0].value == "" || f[0].value == watermark) {
-			f[0].value = albumChosen;
-			$('.submitText').val(f[0].value);
-			//formString = $('#userform');
-		}
-		return f[0].value;
-	}
-
-
-	function sendRequest(count, maxCount, formData) {
-		if (count == 1) $('div.myDiv').html('<img class="loader" src="{{ url_for('static', filename='loader.gif') }}" alt="Fetching..." />');
-		else $('div.myDiv').append('<img class="loader" src="{{ url_for('static', filename='loader.gif') }}" alt="Fetching..." />');
-
-		if (requests) requests.abort();
-		requests = $.ajax({type:'POST', url: '/', data:"&query=" + formData + "&count=" + count, success: function(response) {
-				if (count == 1) { $('div.myDiv').html(response); }
-				else { $('img.loader').replaceWith(response); }
-					count++;
-					if (count <= maxCount) {
-						sendRequest(count, maxCount, formData);
-					}
-		}});
-
-		return false;
-	}
-
-	//function submitForm() {
-	//	formData = assignformString();
-	//	sendRequest(1, 7, formData);
-	//	return false;
-	//}
-
-	$(document).ready(function(){
-                jQuery(function($){
-		        $('.submitText').Watermark(watermark);
-		});
-
-		$('a[href=#topOfPage]').click(function(){
-			$('html, body').animate({scrollTop:0});
-			$('.submitText').val('');
-			$('.submitText').focus();
-		        return false;
-   		});
-
-		
-    		/*$(".submitBtn").attr("disabled", "true");
-		$(".submitText").keyup(function(){
-	        if ($(this).val() != "") {
-        	    $(".submitBtn").removeAttr("disabled");
-	        } else {
-	            $(".submitBtn").attr("disabled", "true");        
-	        }
-	       });*/    
-	});
-	/*]]>*/
-</script>
 
 </body>
 </html>
