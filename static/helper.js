@@ -1,37 +1,39 @@
 var watermark = "Album/Soundtrack Search (Leave blank for random album.)";
 var requests;
 
+/* Decode HTML entities from search query */
 function htmlDecode(value){
 	return $('<div/>').html(value).text();
 }
 
+/* Parse the JSON file in case of an empty search. Pivot method for running the AJAX requests. */
 function jsonParse() {
-	//var jsonFile = "{{url_for('static',filename='list_of_albums.json')}}";
 	var jsonFile = "/static/list_of_albums.json";
 
 	$.getJSON(jsonFile).success(function(data) {
-		var randomIndex = Math.floor(Math.random() * data.albums.length/5);
-		var randomString = data.albums[randomIndex];
+		var randomIndex = Math.floor(Math.random() * data.albums.length/5); //Pick a random album index.
+		var randomString = data.albums[randomIndex]; //Album at index.
 		var decodedString = htmlDecode(randomString);
 		var formData;
 		formData = assignformString(decodedString);
-		sendRequest(1, 9, formData);
+		sendRequest(1, 9, formData); //9 AJAX requests sequentially.
 	});
 
 	return false;
 }
 
+/* Collect the input data before sending off the requests */
 function assignformString(albumChosen) {
 	formString = $('#userform');
 	var f = formString.serializeArray();
 	if(f[0].value == "" || f[0].value == watermark) {
 		f[0].value = albumChosen;
 		$('.submitText').val(f[0].value);
-		//formString = $('#userform');
 	}
 	return f[0].value;
 }
 
+/* Send AJAX requests to server */
 function sendRequest(count, maxCount, formData) {
 	if (count == 1) $('div.myDiv').html("<img class=\"loader\" src=\"/static/loader.gif\" alt=\"Fetching...\" />");
 	else $('div.myDiv').append("<img class=\"loader\" src=\"/static/loader.gif\" alt=\"Fetching...\" />");
@@ -50,12 +52,7 @@ function sendRequest(count, maxCount, formData) {
 
 }
 
-	//function submitForm() {
-	//	formData = assignformString();
-	//	sendRequest(1, 7, formData);
-	//	return false;
-	//}
-
+/* Watermark and onClick handlers on DOM load */
 $(document).ready(function(){
 	jQuery(function($){
 	       $('.submitText').Watermark(watermark);
